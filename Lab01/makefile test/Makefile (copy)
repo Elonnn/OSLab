@@ -1,0 +1,11 @@
+objects = sort.o
+sort:sort.o
+	gcc -o sort -Wall $(objects)
+sort.o:sort.c
+	gcc -i sort.c -o sort.o
+	
+.PHONY:clean
+clean:
+	rm result $(objects) 
+
+	

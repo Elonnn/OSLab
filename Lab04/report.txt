@@ -1,0 +1,57 @@
+
+// 1.在系统调用表中添加系统调用
+// 打开syscalls/syscall_64.tbl
+392		64		memsys		sys_memsys
+
+
+
+
+
+// 2.在头文件中声明函数
+// 打开include/linux/syscalls.h
+asmlinkage int sys_memsys(int mypid);
+
+
+
+
+
+// 3.添加函数原型
+// 打开kernel/sys.c
+asmlinkage int sys_memsys(int mypid)
+{
+    //获取子进程的进程描述符
+    struct pid * kpid=find_get_pid(mypid);
+
+    //获取进程所属的任务的任务描述符
+    struct task_struct * task=pid_task(kpid, PIDTYPE_PID);
+
+    //获取任务对应进程的进程描述符
+    pid_t result1=__task_pid_nr_ns(task,PIDTYPE_PID,kpid->numbers[kpid->level].ns);
+
+    //获取任务的内存描述符
+    struct mm_struct * mm_task=get_task_mm(task);
+    struct vm_area_struct * vm_area = mm_task->mmap;
+    int k = 0;
+    while(vm_area != NULL && k <10000){
+         printk("<%d> logical addr: %p,  physical addr: %p\n", k, vm_area, __phys_addr(vm_area));
+         vm_area = vm_area->vm_next;
+         k++;
+    }
+
+    printk("<k> the mm_count of the mm_area_struct is: %d\n",mm_task->map_count);
+
+    return 0;
+}
+
+
+
+// 4. 重新编译安装内核
+
+
+
+
+// 5. C语言测试文件: memsys.c
+// 执行
+编译：gcc memsys.c -o memsys
+执行：./memsys #进程号
+

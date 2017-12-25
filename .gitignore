@@ -1,0 +1,16 @@
+# Log file
+*.log
+
+# Package Files #
+*.zip
+*.tar.gz
+*.rar
+
+.DS_Store
+**/.DS_Store
+
+# Microsoft Office Files
+*.ppt
+*.pptx
+*.doc
+*.docx

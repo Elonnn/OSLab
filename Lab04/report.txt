@@ -55,3 +55,19 @@ asmlinkage int sys_memsys(int mypid)
 编译：gcc memsys.c -o memsys
 执行：./memsys #进程号
 
+#include <sys/syscall.h>
+#include <stdio.h>
+#include <unistd.h>
+#include string.h>
+
+int main(){
+	const char filename[] = "test.zip";
+	syscall(329, filename);
+	
+	return 0;
+}
+
+
+
+
+
